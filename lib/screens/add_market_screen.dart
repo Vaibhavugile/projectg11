@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 
 import '../services/market_service.dart';
-
+import '../models/market_model.dart';
 class AddMarketScreen extends StatefulWidget {
-  const AddMarketScreen({super.key});
+  final MarketModel? market;
+
+  const AddMarketScreen({
+    super.key,
+    this.market,
+  });
+
+  bool get isEdit => market != null;
 
   @override
   State<AddMarketScreen> createState() =>
@@ -46,12 +53,35 @@ class _AddMarketScreenState
 
   bool _saving = false;
 
-  @override
-  void initState() {
-    super.initState();
+@override
+void initState() {
+  super.initState();
 
-    _nameController.addListener(_generateSlug);
+  _nameController.addListener(_generateSlug);
+
+  if (widget.market != null) {
+    final market = widget.market!;
+
+    _nameController.text = market.name;
+    _slugController.text = market.slug;
+
+    _openTimeController.text = market.openTime;
+    _closeTimeController.text = market.closeTime;
+
+    _displayOrderController.text =
+        market.displayOrder.toString();
+
+    _sortOrderController.text =
+        market.sortOrder.toString();
+
+    _viewerController.text =
+        market.viewers.toString();
+
+    _isActive = market.isActive;
+    _isFeatured = market.isFeatured;
+    _favorite = market.favorite;
   }
+}
 
   @override
   void dispose() {
@@ -85,7 +115,18 @@ class _AddMarketScreenState
 
   if (picked == null) return;
 
-  controller.text = picked.format(context);
+  final hour = picked.hourOfPeriod == 0
+      ? 12
+      : picked.hourOfPeriod;
+
+  final minute =
+      picked.minute.toString().padLeft(2, '0');
+
+  final period =
+      picked.period == DayPeriod.am ? "AM" : "PM";
+
+  controller.text =
+      "${hour.toString().padLeft(2, '0')}:$minute $period";
 }
 
 String? _requiredValidator(String? value) {
@@ -104,30 +145,53 @@ Future<void> _saveMarket() async {
       _saving = true;
     });
 
-    await _marketService.addMarket(
-      name: _nameController.text.trim(),
-      slug: _slugController.text.trim(),
-      openTime: _openTimeController.text.trim(),
-      closeTime: _closeTimeController.text.trim(),
-      displayOrder:
-          int.tryParse(_displayOrderController.text) ?? 1,
-      sortOrder:
-          int.tryParse(_sortOrderController.text) ?? 1,
-      viewers:
-          int.tryParse(_viewerController.text) ?? 0,
-      isActive: _isActive,
-      isFeatured: _isFeatured,
-      favorite: _favorite,
-    );
+    if (widget.isEdit) {
+  await _marketService.updateMarket(
+    marketId: widget.market!.id,
+    name: _nameController.text.trim(),
+    slug: _slugController.text.trim(),
+    openTime: _openTimeController.text.trim(),
+    closeTime: _closeTimeController.text.trim(),
+    displayOrder:
+        int.tryParse(_displayOrderController.text) ?? 1,
+    sortOrder:
+        int.tryParse(_sortOrderController.text) ?? 1,
+    viewers:
+        int.tryParse(_viewerController.text) ?? 0,
+    isActive: _isActive,
+    isFeatured: _isFeatured,
+    favorite: _favorite,
+  );
+} else {
+  await _marketService.addMarket(
+    name: _nameController.text.trim(),
+    slug: _slugController.text.trim(),
+    openTime: _openTimeController.text.trim(),
+    closeTime: _closeTimeController.text.trim(),
+    displayOrder:
+        int.tryParse(_displayOrderController.text) ?? 1,
+    sortOrder:
+        int.tryParse(_sortOrderController.text) ?? 1,
+    viewers:
+        int.tryParse(_viewerController.text) ?? 0,
+    isActive: _isActive,
+    isFeatured: _isFeatured,
+    favorite: _favorite,
+  );
+}
 
     if (!mounted) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("✅ Market Added Successfully"),
-        backgroundColor: Colors.green,
-      ),
-    );
+  ScaffoldMessenger.of(context).showSnackBar(
+  SnackBar(
+    content: Text(
+      widget.isEdit
+          ? "✅ Market Updated Successfully"
+          : "✅ Market Added Successfully",
+    ),
+    backgroundColor: Colors.green,
+  ),
+);
 
     Navigator.pop(context, true);
   } catch (e) {
@@ -230,23 +294,27 @@ Widget _settingTile({
   elevation: 0,
   centerTitle: false,
   titleSpacing: 20,
-  title: const Column(
+  title: Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
 
       Text(
-        "Add Market",
-        style: TextStyle(
+        widget.isEdit
+            ? "Edit Market"
+            : "Add Market",
+        style: const TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.w800,
         ),
       ),
 
-      SizedBox(height: 2),
+      const SizedBox(height: 2),
 
       Text(
-        "Create a new market",
-        style: TextStyle(
+        widget.isEdit
+            ? "Update market information"
+            : "Create a new market",
+        style: const TextStyle(
           fontSize: 13,
           color: Colors.grey,
           fontWeight: FontWeight.w500,
@@ -286,35 +354,37 @@ Widget _settingTile({
 
       SizedBox(width: 16),
 
-      Expanded(
-        child: Column(
-          crossAxisAlignment:
-              CrossAxisAlignment.start,
-          children: [
+     Expanded(
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
 
-            Text(
-              "Market Information",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-
-            SizedBox(height: 4),
-
-            Text(
-              "Enter the basic market details",
-              style: TextStyle(
-                color: Colors.white70,
-                fontSize: 13,
-              ),
-            ),
-
-          ],
+      Text(
+        
+        
+             "Market Information",
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+          fontWeight: FontWeight.w800,
         ),
       ),
 
+      const SizedBox(height: 4),
+
+      Text(
+        
+            
+             "Enter the basic market details",
+        style: const TextStyle(
+          color: Colors.white70,
+          fontSize: 13,
+        ),
+      ),
+
+    ],
+  ),
+),
     ],
   ),
 ),
@@ -657,11 +727,15 @@ Container(
                 : const Icon(
                     Icons.check_circle_rounded,
                   ),
-            label: Text(
-              _saving
-                  ? "Saving..."
-                  : "Save Market",
-            ),
+            label:Text(
+  _saving
+      ? (widget.isEdit
+            ? "Updating..."
+            : "Saving...")
+      : (widget.isEdit
+            ? "Update Market"
+            : "Save Market"),
+),
             style: FilledButton.styleFrom(
               backgroundColor:
                   Colors.transparent,

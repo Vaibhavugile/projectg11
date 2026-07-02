@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../screens/manage_result_screen.dart';
 import '../models/market_model.dart';
-
+import '../screens/add_market_screen.dart';
 class MarketCard extends StatelessWidget {
   final MarketModel market;
   final int index;
@@ -516,13 +516,24 @@ Widget _buildFooter(BuildContext context) {
         children: [
 
           _actionButton(
-            Icons.edit_rounded,
-            "Edit",
-            Colors.blue,
-            onTap: () {
-              // TODO: Edit Market
-            },
-          ),
+  Icons.edit_rounded,
+  "Edit",
+  Colors.blue,
+  onTap: () async {
+    final refresh = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => AddMarketScreen(
+          market: market,
+        ),
+      ),
+    );
+
+    if (refresh == true && context.mounted) {
+      Navigator.pop(context, true);
+    }
+  },
+),
 
           _actionButton(
             Icons.bar_chart_rounded,

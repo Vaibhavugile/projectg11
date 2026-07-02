@@ -92,38 +92,49 @@ class MarketService {
   /// ==========================================
   /// Update Market
   /// ==========================================
-  Future<void> updateMarket({
-    required String marketId,
-    required String name,
-    required String slug,
-    required String openTime,
-    required String closeTime,
-    required int displayOrder,
-    required int sortOrder,
-    required int viewers,
-    required bool isActive,
-    required bool isFeatured,
-    required bool favorite,
-  }) async {
-    await _markets.doc(marketId).update({
-      "name": name.trim(),
-      "slug": slug.trim(),
+ /// ==========================================
+/// Update Market
+/// ==========================================
+Future<void> updateMarket({
+  required String marketId,
+  required String name,
+  required String slug,
+  required String openTime,
+  required String closeTime,
+  required int displayOrder,
+  required int sortOrder,
+  required int viewers,
+  required bool isActive,
+  required bool isFeatured,
+  required bool favorite,
+}) async {
+  final docRef = _markets.doc(marketId);
 
-      "openTime": openTime,
-      "closeTime": closeTime,
+  final snapshot = await docRef.get();
 
-      "displayOrder": displayOrder,
-      "sortOrder": sortOrder,
-
-      "viewers": viewers,
-
-      "isActive": isActive,
-      "isFeatured": isFeatured,
-      "favorite": favorite,
-
-      "updatedAt": FieldValue.serverTimestamp(),
-    });
+  if (!snapshot.exists) {
+    throw Exception("Market not found.");
   }
+
+  await docRef.update({
+    "name": name.trim(),
+    "slug": slug.trim(),
+
+    "openTime": openTime,
+    "closeTime": closeTime,
+
+    "displayOrder": displayOrder,
+    "sortOrder": sortOrder,
+
+    "viewers": viewers,
+
+    "isActive": isActive,
+    "isFeatured": isFeatured,
+    "favorite": favorite,
+
+    "updatedAt": FieldValue.serverTimestamp(),
+  });
+}
 
   /// ==========================================
   /// Delete Market
