@@ -5,6 +5,7 @@ import '../models/market_model.dart';
 import '../utils/result_utils.dart';
 import 'manage_result_screen.dart';
 import 'dart:async';
+import '../widgets/result_task_card.dart';
 
 class ResultsScreen extends StatefulWidget {
   const ResultsScreen({super.key});
@@ -569,284 +570,25 @@ debugPrint(
 debugPrint(
     "Priority : ${status.priorityText}");
 
-                            return Material(
-  color: Colors.transparent,
-  child: InkWell(
-    borderRadius: BorderRadius.circular(22),
-    onTap: () async {
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => ManageResultScreen(
-            marketId: market.id,
-          ),
-        ),
-      );
-
-      if (!mounted) return;
-
-      setState(() {});
-    },
-    child: Ink(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(22),
-      boxShadow: [
-  BoxShadow(
-    color: Colors.black.withOpacity(.04),
-    blurRadius: 28,
-    spreadRadius: 1,
-    offset: const Offset(0, 12),
-  ),
-],
-      ),
-      child: Row(
-  children: [
-
-    Container(
-      width: 5,
-      decoration: BoxDecoration(
-        color: status.badge == "overdue"
-            ? Colors.red
-            : status.badge == "due"
-                ? Colors.orange
-                : status.badge == "completed"
-                    ? Colors.green
-                    : Colors.blueGrey,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(22),
-          bottomLeft: Radius.circular(22),
+                            return ResultTaskCard(
+  index: index,
+  market: market,
+  latestResult: latestResult,
+  status: status,
+  onTap: () async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ManageResultScreen(
+          marketId: market.id,
         ),
       ),
-    ),
+    );
 
-    Expanded(
-      child: Padding(
-        padding: const EdgeInsets.all(18),
-        child: Column(
-          children: [
+    if (!mounted) return;
 
-            /// TOP
-
-            Row(
-              children: [
-
-                Container(
-  width: 46,
-  height: 46,
-  decoration: BoxDecoration(
-    gradient: const LinearGradient(
-      colors: [
-        Color(0xff7C3AED),
-        Color(0xff9333EA),
-      ],
-    ),
-    borderRadius: BorderRadius.circular(15),
-  ),
-                  child: Center(
-                    child: Text(
-  "${index + 1}",
-  style: const TextStyle(
-    color: Colors.white,
-    fontWeight: FontWeight.w800,
-    fontSize: 15,
-  ),
-),
-                  ),
-                ),
-
-                const SizedBox(width: 14),
-
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start,
-                    children: [
-Text(
-  market.name,
-  maxLines: 1,
-  overflow: TextOverflow.ellipsis,
-  style: const TextStyle(
-    fontSize: 20,
-    fontWeight: FontWeight.w800,
-    letterSpacing: -.4,
-  ),
-),
-
-                      const SizedBox(height: 4),
-
-                      Row(
-  children: [
-    Icon(
-      Icons.schedule_rounded,
-      size: 15,
-      color: Colors.grey.shade600,
-    ),
-    const SizedBox(width: 4),
-    Text(
-      "${market.openTime} → ${market.closeTime}",
-      style: TextStyle(
-        color: Colors.grey.shade600,
-        fontWeight: FontWeight.w600,
-        fontSize: 13,
-      ),
-    ),
-  ],
-),
-                    ],
-                  ),
-                ),
-
-                _priorityBadge(
-                  status.priorityText,
-                ),
-
-              ],
-            ),
-
-            const SizedBox(height: 18),
-
-            Row(
-              children: [
-
-               Container(
-  width: 36,
-  height: 36,
-  decoration: BoxDecoration(
-    color: Colors.deepPurple.shade50,
-    borderRadius: BorderRadius.circular(10),
-  ),
-  child: const Icon(
-    Icons.casino_rounded,
-    color: Colors.deepPurple,
-    size: 20,
-  ),
-),
-
-                const SizedBox(width: 8),
-
-                Expanded(
-                  child: Text(
-                    latestResult,
-                    maxLines: 1,
-                   style: const TextStyle(
-  fontSize: 22,
-  fontWeight: FontWeight.w800,
-  letterSpacing: 1.4,
-),
-                  ),
-                ),
-
-              ],
-            ),
-
-            const SizedBox(height: 16),
-
-            Row(
-              children: [
-
-                _statusBadge(
-                  status.status,
-                ),
-
-                const SizedBox(width: 12),
-
-                Expanded(
-                  child: Text(
-                    status.description,
-                    style: TextStyle(
-                      color:
-                          Colors.grey.shade700,
-                    ),
-                    overflow:
-                        TextOverflow.ellipsis,
-                  ),
-                ),
-
-                Container(
-  decoration: BoxDecoration(
-    gradient: LinearGradient(
-      colors: status.badge == "completed"
-          ? [
-              const Color(0xff10B981),
-              const Color(0xff059669),
-            ]
-          : status.badge == "overdue"
-              ? [
-                  const Color(0xffEF4444),
-                  const Color(0xffDC2626),
-                ]
-              : [
-                  const Color(0xff7C3AED),
-                  const Color(0xff5B21B6),
-                ],
-    ),
-    borderRadius: BorderRadius.circular(14),
-    boxShadow: [
-      BoxShadow(
-        color: Colors.black.withOpacity(.12),
-        blurRadius: 12,
-        offset: const Offset(0, 6),
-      ),
-    ],
-  ),
-  child: Material(
-    color: Colors.transparent,
-    child: InkWell(
-      borderRadius: BorderRadius.circular(14),
-      onTap: () async {
-        await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => ManageResultScreen(
-              marketId: market.id,
-            ),
-          ),
-        );
-
-        if (!mounted) return;
-
-        setState(() {});
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 18,
-          vertical: 12,
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              status.action,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            const SizedBox(width: 6),
-            const Icon(
-              Icons.arrow_forward_rounded,
-              color: Colors.white,
-              size: 18,
-            ),
-          ],
-        ),
-      ),
-    ),
-  ),
-),
-
-              ],
-            ),
-
-              ],
-        ),
-      ),
-    ),
-  ],
-),
-    ),
-  ),
+    setState(() {});
+  },
 );
                             },
                           );
