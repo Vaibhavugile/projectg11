@@ -262,23 +262,94 @@ Widget _priorityBadge(String priority) {
     return Scaffold(
       backgroundColor: const Color(0xffF5F5F5),
 
-      appBar: AppBar(
-        title: const Text("🎯 Result Management"),
-        actions: [
-          IconButton(
-            onPressed: () {
-              setState(() {});
-            },
-            icon: const Icon(Icons.refresh),
-          ),
-          const SizedBox(width: 8),
-        ],
-      ),
+      
 
-      body: Padding(
-        padding: const EdgeInsets.all(16),
+      body: SafeArea(
         child: Column(
           children: [
+            Container(
+        padding: const EdgeInsets.fromLTRB(
+          22,
+          20,
+          22,
+          16,
+        ),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(28),
+            bottomRight: Radius.circular(28),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment:
+              CrossAxisAlignment.start,
+          children: [
+
+            Row(
+              children: [
+
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment:
+                        CrossAxisAlignment.start,
+                    children: [
+
+                      Text(
+                        "Good Morning 👋",
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.grey.shade600,
+                          fontWeight:
+                              FontWeight.w600,
+                        ),
+                      ),
+
+                      const SizedBox(height: 4),
+
+                      const Text(
+                        "Result Management",
+                        style: TextStyle(
+                          fontSize: 30,
+                          fontWeight:
+                              FontWeight.w800,
+                          letterSpacing: -.8,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                Container(
+                  width: 54,
+                  height: 54,
+                  decoration: BoxDecoration(
+                    gradient:
+                        const LinearGradient(
+                      colors: [
+                        Color(0xff6A1B9A),
+                        Color(0xff8E24AA),
+                      ],
+                    ),
+                    borderRadius:
+                        BorderRadius.circular(
+                            18),
+                  ),
+                  child: IconButton(
+                    color: Colors.white,
+                    onPressed: () {
+                      setState(() {});
+                    },
+                    icon: const Icon(
+                      Icons.refresh_rounded,
+                    ),
+                  ),
+                ),
+
+              ],
+            ),
+
+            const SizedBox(height: 22),
             /// Search
             TextField(
               controller: _searchController,
@@ -306,23 +377,61 @@ Widget _priorityBadge(String priority) {
                 ),
               ),
             ),
+            const SizedBox(height: 18),
+
+SizedBox(
+  height: 42,
+  child: ListView(
+    scrollDirection: Axis.horizontal,
+    children: [
+
+      _filterChip(
+        "All",
+        true,
+      ),
+
+      const SizedBox(width: 10),
+
+      _filterChip(
+        "Overdue",
+        false,
+      ),
+
+      const SizedBox(width: 10),
+
+      _filterChip(
+        "Due",
+        false,
+      ),
+
+      const SizedBox(width: 10),
+
+      _filterChip(
+        "Completed",
+        false,
+      ),
+
+      const SizedBox(width: 10),
+
+      _filterChip(
+        "Upcoming",
+        false,
+      ),
+
+    ],
+  ),
+),
 
             const SizedBox(height: 20),
+          
+],
+),
+),
 
             Expanded(
   child: Card(
     clipBehavior: Clip.antiAlias,
-    child: SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: SizedBox(
-        width: 1280,
-        child: Column(
-          children: [
-                    /// Header
-                    _buildHeader(),
-
-                    /// Rows
-                    Expanded(
+    
                       child:
                           StreamBuilder<QuerySnapshot>(
                         stream: _firestore
@@ -421,14 +530,17 @@ Widget _priorityBadge(String priority) {
   return nextA.compareTo(nextB);
 });
 
-                          return ListView.separated(
+                         return ListView.separated(
+  padding: const EdgeInsets.fromLTRB(
+    16,
+    12,
+    16,
+    24,
+  ),
                             itemCount:
                                 markets.length,
-                            separatorBuilder:
-                                (_, __) =>
-                                    const Divider(
-                              height: 1,
-                            ),
+                            separatorBuilder: (_, __) =>
+    const SizedBox(height: 14),
                             itemBuilder:
                                 (context, index) {
                               final market =
@@ -457,66 +569,283 @@ debugPrint(
 debugPrint(
     "Priority : ${status.priorityText}");
 
-                             return Container(
-  color: index.isEven
-      ? Colors.white
-      : const Color(0xffFAFAFA),
-  child: Row(
-    children: [
+                            return Material(
+  color: Colors.transparent,
+  child: InkWell(
+    borderRadius: BorderRadius.circular(22),
+    onTap: () async {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => ManageResultScreen(
+            marketId: market.id,
+          ),
+        ),
+      );
 
-      _cell("${index + 1}", 50),
+      if (!mounted) return;
 
-      _cell(market.name, 220),
+      setState(() {});
+    },
+    child: Ink(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(22),
+      boxShadow: [
+  BoxShadow(
+    color: Colors.black.withOpacity(.04),
+    blurRadius: 28,
+    spreadRadius: 1,
+    offset: const Offset(0, 12),
+  ),
+],
+      ),
+      child: Row(
+  children: [
 
-      _cell(market.openTime, 110),
+    Container(
+      width: 5,
+      decoration: BoxDecoration(
+        color: status.badge == "overdue"
+            ? Colors.red
+            : status.badge == "due"
+                ? Colors.orange
+                : status.badge == "completed"
+                    ? Colors.green
+                    : Colors.blueGrey,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(22),
+          bottomLeft: Radius.circular(22),
+        ),
+      ),
+    ),
 
-      _cell(market.closeTime, 110),
+    Expanded(
+      child: Padding(
+        padding: const EdgeInsets.all(18),
+        child: Column(
+          children: [
 
-      _cell(latestResult, 170),
+            /// TOP
 
-SizedBox(
-  width: 150,
-  child: Center(
-    child: _statusBadge(status.status),
+            Row(
+              children: [
+
+                Container(
+  width: 46,
+  height: 46,
+  decoration: BoxDecoration(
+    gradient: const LinearGradient(
+      colors: [
+        Color(0xff7C3AED),
+        Color(0xff9333EA),
+      ],
+    ),
+    borderRadius: BorderRadius.circular(15),
+  ),
+                  child: Center(
+                    child: Text(
+  "${index + 1}",
+  style: const TextStyle(
+    color: Colors.white,
+    fontWeight: FontWeight.w800,
+    fontSize: 15,
   ),
 ),
-_cell(
-  status.description,
-  220,
+                  ),
+                ),
+
+                const SizedBox(width: 14),
+
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment:
+                        CrossAxisAlignment.start,
+                    children: [
+Text(
+  market.name,
+  maxLines: 1,
+  overflow: TextOverflow.ellipsis,
+  style: const TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.w800,
+    letterSpacing: -.4,
+  ),
 ),
-   SizedBox(
-  width: 120,
-  child: Center(
-    child: _priorityBadge(
-      status.priorityText,
+
+                      const SizedBox(height: 4),
+
+                      Row(
+  children: [
+    Icon(
+      Icons.schedule_rounded,
+      size: 15,
+      color: Colors.grey.shade600,
+    ),
+    const SizedBox(width: 4),
+    Text(
+      "${market.openTime} → ${market.closeTime}",
+      style: TextStyle(
+        color: Colors.grey.shade600,
+        fontWeight: FontWeight.w600,
+        fontSize: 13,
+      ),
+    ),
+  ],
+),
+                    ],
+                  ),
+                ),
+
+                _priorityBadge(
+                  status.priorityText,
+                ),
+
+              ],
+            ),
+
+            const SizedBox(height: 18),
+
+            Row(
+              children: [
+
+               Container(
+  width: 36,
+  height: 36,
+  decoration: BoxDecoration(
+    color: Colors.deepPurple.shade50,
+    borderRadius: BorderRadius.circular(10),
+  ),
+  child: const Icon(
+    Icons.casino_rounded,
+    color: Colors.deepPurple,
+    size: 20,
+  ),
+),
+
+                const SizedBox(width: 8),
+
+                Expanded(
+                  child: Text(
+                    latestResult,
+                    maxLines: 1,
+                   style: const TextStyle(
+  fontSize: 22,
+  fontWeight: FontWeight.w800,
+  letterSpacing: 1.4,
+),
+                  ),
+                ),
+
+              ],
+            ),
+
+            const SizedBox(height: 16),
+
+            Row(
+              children: [
+
+                _statusBadge(
+                  status.status,
+                ),
+
+                const SizedBox(width: 12),
+
+                Expanded(
+                  child: Text(
+                    status.description,
+                    style: TextStyle(
+                      color:
+                          Colors.grey.shade700,
+                    ),
+                    overflow:
+                        TextOverflow.ellipsis,
+                  ),
+                ),
+
+                Container(
+  decoration: BoxDecoration(
+    gradient: LinearGradient(
+      colors: status.badge == "completed"
+          ? [
+              const Color(0xff10B981),
+              const Color(0xff059669),
+            ]
+          : status.badge == "overdue"
+              ? [
+                  const Color(0xffEF4444),
+                  const Color(0xffDC2626),
+                ]
+              : [
+                  const Color(0xff7C3AED),
+                  const Color(0xff5B21B6),
+                ],
+    ),
+    borderRadius: BorderRadius.circular(14),
+    boxShadow: [
+      BoxShadow(
+        color: Colors.black.withOpacity(.12),
+        blurRadius: 12,
+        offset: const Offset(0, 6),
+      ),
+    ],
+  ),
+  child: Material(
+    color: Colors.transparent,
+    child: InkWell(
+      borderRadius: BorderRadius.circular(14),
+      onTap: () async {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ManageResultScreen(
+              marketId: market.id,
+            ),
+          ),
+        );
+
+        if (!mounted) return;
+
+        setState(() {});
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 18,
+          vertical: 12,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              status.action,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(width: 6),
+            const Icon(
+              Icons.arrow_forward_rounded,
+              color: Colors.white,
+              size: 18,
+            ),
+          ],
+        ),
+      ),
     ),
   ),
 ),
 
-      SizedBox(
-        width: 120,
-        height: 55,
-        child: Center(
-          child: FilledButton.tonal(
-  onPressed: () async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => ManageResultScreen(
-          marketId: market.id,
+              ],
+            ),
+
+              ],
         ),
       ),
-    );
-
-    if (!mounted) return;
-
-    setState(() {});
-  },
-  child: Text(status.action),
+    ),
+  ],
 ),
-        ),
-      ),
-    ],
+    ),
   ),
 );
                             },
@@ -524,15 +853,58 @@ _cell(
                         },
                       ),
                     ),
+            ),
                   ],
                 ),
+    
       ),
-              ),
-            ),
-            ),
-          ],
-        ),
-      ),
-    );
+    
+              );
+          
   }
+}
+Widget _filterChip(
+  String title,
+  bool selected,
+) {
+  return AnimatedContainer(
+    duration: const Duration(milliseconds: 250),
+    padding: const EdgeInsets.symmetric(
+      horizontal: 18,
+      vertical: 10,
+    ),
+    decoration: BoxDecoration(
+      gradient: selected
+          ? const LinearGradient(
+              colors: [
+                Color(0xff6A1B9A),
+                Color(0xff8E24AA),
+              ],
+            )
+          : null,
+      color: selected ? null : Colors.white,
+      borderRadius: BorderRadius.circular(30),
+      border: Border.all(
+        color: selected
+            ? Colors.transparent
+            : Colors.grey.shade300,
+      ),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(.04),
+          blurRadius: 10,
+          offset: const Offset(0, 4),
+        ),
+      ],
+    ),
+    child: Text(
+      title,
+      style: TextStyle(
+        color: selected
+            ? Colors.white
+            : Colors.black87,
+        fontWeight: FontWeight.w700,
+      ),
+    ),
+  );
 }
