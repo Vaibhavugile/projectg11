@@ -147,13 +147,115 @@ Future<void> _saveMarket() async {
     });
   }
 }
+Widget _settingTile({
+  required IconData icon,
+  required Color color,
+  required String title,
+  required String subtitle,
+  required bool value,
+  required ValueChanged<bool> onChanged,
+}) {
+  return Container(
+    padding: const EdgeInsets.symmetric(
+      horizontal: 16,
+      vertical: 12,
+    ),
+    decoration: BoxDecoration(
+      color: const Color(0xffF8FAFC),
+      borderRadius: BorderRadius.circular(18),
+      border: Border.all(
+        color: const Color(0xffE5E7EB),
+      ),
+    ),
+    child: Row(
+      children: [
+
+        Container(
+          width: 46,
+          height: 46,
+          decoration: BoxDecoration(
+            color: color.withOpacity(.12),
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: Icon(
+            icon,
+            color: color,
+          ),
+        ),
+
+        const SizedBox(width: 16),
+
+        Expanded(
+          child: Column(
+            crossAxisAlignment:
+                CrossAxisAlignment.start,
+            children: [
+
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+
+              const SizedBox(height: 2),
+
+              Text(
+                subtitle,
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.grey.shade600,
+                ),
+              ),
+
+            ],
+          ),
+        ),
+
+        Switch(
+          value: value,
+          onChanged: onChanged,
+        ),
+
+      ],
+    ),
+  );
+}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add Market"),
+  elevation: 0,
+  centerTitle: false,
+  titleSpacing: 20,
+  title: const Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+
+      Text(
+        "Add Market",
+        style: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.w800,
+        ),
       ),
+
+      SizedBox(height: 2),
+
+      Text(
+        "Create a new market",
+        style: TextStyle(
+          fontSize: 13,
+          color: Colors.grey,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+
+    ],
+  ),
+),
 
       body: SafeArea(
         child: Form(
@@ -162,231 +264,423 @@ Future<void> _saveMarket() async {
             padding: const EdgeInsets.all(20),
             children: [
 
-              const Text(
-                "Market Details",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
+              Container(
+  padding: const EdgeInsets.all(18),
+  decoration: BoxDecoration(
+    gradient: const LinearGradient(
+      colors: [
+        Color(0xff7C3AED),
+        Color(0xff9333EA),
+      ],
+    ),
+    borderRadius: BorderRadius.circular(22),
+  ),
+  child: const Row(
+    children: [
+
+      Icon(
+        Icons.storefront_rounded,
+        color: Colors.white,
+        size: 32,
+      ),
+
+      SizedBox(width: 16),
+
+      Expanded(
+        child: Column(
+          crossAxisAlignment:
+              CrossAxisAlignment.start,
+          children: [
+
+            Text(
+              "Market Information",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.w800,
               ),
+            ),
 
-              const SizedBox(height: 25),
+            SizedBox(height: 4),
 
-              TextFormField(
+            Text(
+              "Enter the basic market details",
+              style: TextStyle(
+                color: Colors.white70,
+                fontSize: 13,
+              ),
+            ),
+
+          ],
+        ),
+      ),
+
+    ],
+  ),
+),
+
+const SizedBox(height:24),
+
+        TextFormField(
   controller: _nameController,
   validator: _requiredValidator,
-  decoration: const InputDecoration(
+  textCapitalization: TextCapitalization.words,
+  decoration: InputDecoration(
     labelText: "Market Name",
-    border: OutlineInputBorder(),
-    prefixIcon: Icon(Icons.store),
+    hintText: "Enter market name",
+    prefixIcon: Container(
+      margin: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.deepPurple.withOpacity(.10),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: const Icon(
+        Icons.storefront_rounded,
+        color: Colors.deepPurple,
+      ),
+    ),
   ),
 ),
 
               const SizedBox(height: 18),
 
-              TextFormField(
+   TextFormField(
   controller: _slugController,
   validator: _requiredValidator,
-  decoration: const InputDecoration(
+  decoration: InputDecoration(
     labelText: "Slug",
-    border: OutlineInputBorder(),
-    prefixIcon: Icon(Icons.link),
+    hintText: "market-slug",
+    prefixIcon: Container(
+      margin: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.blue.withOpacity(.10),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: const Icon(
+        Icons.link_rounded,
+        color: Colors.blue,
+      ),
+    ),
   ),
 ),
 
               const SizedBox(height: 18),
-
-              TextFormField(
+TextFormField(
   controller: _openTimeController,
   validator: _requiredValidator,
   readOnly: true,
   onTap: () => _pickTime(_openTimeController),
-  decoration: const InputDecoration(
+  decoration: InputDecoration(
     labelText: "Open Time",
-    border: OutlineInputBorder(),
-    prefixIcon: Icon(Icons.schedule),
-    suffixIcon: Icon(Icons.access_time),
+    hintText: "Select time",
+    prefixIcon: Container(
+      margin: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.green.withOpacity(.10),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: const Icon(
+        Icons.schedule_rounded,
+        color: Colors.green,
+      ),
+    ),
+    suffixIcon: const Icon(Icons.keyboard_arrow_down),
   ),
 ),
 
               const SizedBox(height: 18),
 
-             TextFormField(
+           TextFormField(
   controller: _closeTimeController,
   validator: _requiredValidator,
   readOnly: true,
   onTap: () => _pickTime(_closeTimeController),
-  decoration: const InputDecoration(
+  decoration: InputDecoration(
     labelText: "Close Time",
-    border: OutlineInputBorder(),
-    prefixIcon: Icon(Icons.schedule),
-    suffixIcon: Icon(Icons.access_time),
+    hintText: "Select time",
+    prefixIcon: Container(
+      margin: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.red.withOpacity(.10),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: const Icon(
+        Icons.schedule_rounded,
+        color: Colors.red,
+      ),
+    ),
+    suffixIcon: const Icon(Icons.keyboard_arrow_down),
   ),
 ),
 
               const SizedBox(height: 18),
 
-              Row(
-                children: [
+             Container(
+  padding: const EdgeInsets.all(20),
+  decoration: BoxDecoration(
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(22),
+    border: Border.all(
+      color: const Color(0xffE5E7EB),
+    ),
+  ),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
 
-                  Expanded(
-                    child: TextFormField(
-                      controller:
-                          _displayOrderController,
-                      keyboardType:
-                          TextInputType.number,
-                      decoration:
-                          const InputDecoration(
-                        labelText:
-                            "Display Order",
-                        border:
-                            OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
+      const Row(
+        children: [
 
-                  const SizedBox(width: 15),
+          Icon(
+            Icons.tune_rounded,
+            color: Colors.deepPurple,
+          ),
 
-                  Expanded(
-                    child: TextFormField(
-                      controller:
-                          _sortOrderController,
-                      keyboardType:
-                          TextInputType.number,
-                      decoration:
-                          const InputDecoration(
-                        labelText:
-                            "Sort Order",
-                        border:
-                            OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                ],
+          SizedBox(width: 10),
+
+          Text(
+            "Market Configuration",
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+
+        ],
+      ),
+
+      const SizedBox(height: 20),
+
+      Row(
+        children: [
+
+          Expanded(
+            child: TextFormField(
+              controller: _displayOrderController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: "Display",
+                prefixIcon: Icon(Icons.dashboard_customize_rounded),
               ),
+            ),
+          ),
 
-              const SizedBox(height: 18),
+          const SizedBox(width: 14),
 
-              TextFormField(
-                controller: _viewerController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: "Initial Viewers",
-                  border: OutlineInputBorder(),
-                  prefixIcon:
-                      Icon(Icons.visibility),
-                ),
+          Expanded(
+            child: TextFormField(
+              controller: _sortOrderController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: "Sort",
+                prefixIcon: Icon(Icons.swap_vert_rounded),
               ),
-              const SizedBox(height: 30),
+            ),
+          ),
 
-const Divider(),
+        ],
+      ),
 
-const SizedBox(height: 25),
+      const SizedBox(height: 18),
 
-const Text(
-  "Market Settings",
-  style: TextStyle(
-    fontSize: 22,
-    fontWeight: FontWeight.bold,
+      TextFormField(
+        controller: _viewerController,
+        keyboardType: TextInputType.number,
+        decoration: const InputDecoration(
+          labelText: "Initial Viewers",
+          prefixIcon: Icon(Icons.visibility_rounded),
+        ),
+      ),
+
+    ],
   ),
 ),
 
-const SizedBox(height: 20),
+const SizedBox(height: 30),
 
-Card(
-  child: SwitchListTile(
-    secondary: const Icon(
-      Icons.check_circle,
-      color: Colors.green,
+Container(
+  padding: const EdgeInsets.all(20),
+  decoration: BoxDecoration(
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(22),
+    border: Border.all(
+      color: const Color(0xffE5E7EB),
     ),
-    title: const Text("Active Market"),
-    subtitle: const Text(
-      "Show this market in the app",
-    ),
-    value: _isActive,
-    onChanged: (value) {
-      setState(() {
-        _isActive = value;
-      });
-    },
   ),
-),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
 
-const SizedBox(height: 12),
+      const Row(
+        children: [
 
-Card(
-  child: SwitchListTile(
-    secondary: const Icon(
-      Icons.star,
-      color: Colors.orange,
-    ),
-    title: const Text("Featured Market"),
-    subtitle: const Text(
-      "Show this market on the home page",
-    ),
-    value: _isFeatured,
-    onChanged: (value) {
-      setState(() {
-        _isFeatured = value;
-      });
-    },
-  ),
-),
+          Icon(
+            Icons.settings_rounded,
+            color: Colors.deepPurple,
+          ),
 
-const SizedBox(height: 12),
+          SizedBox(width: 10),
 
-Card(
-  child: SwitchListTile(
-    secondary: const Icon(
-      Icons.favorite,
-      color: Colors.red,
-    ),
-    title: const Text("Favorite Market"),
-    subtitle: const Text(
-      "Mark this market as favourite",
-    ),
-    value: _favorite,
-    onChanged: (value) {
-      setState(() {
-        _favorite = value;
-      });
-    },
+          Text(
+            "Market Settings",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+
+        ],
+      ),
+
+      const SizedBox(height: 20),
+
+      _settingTile(
+        icon: Icons.check_circle_rounded,
+        color: Colors.green,
+        title: "Active Market",
+        subtitle: "Visible to users",
+        value: _isActive,
+        onChanged: (v) {
+          setState(() => _isActive = v);
+        },
+      ),
+
+      const SizedBox(height: 14),
+
+      _settingTile(
+        icon: Icons.star_rounded,
+        color: Colors.orange,
+        title: "Featured Market",
+        subtitle: "Highlight on home page",
+        value: _isFeatured,
+        onChanged: (v) {
+          setState(() => _isFeatured = v);
+        },
+      ),
+
+      const SizedBox(height: 14),
+
+      _settingTile(
+        icon: Icons.favorite_rounded,
+        color: Colors.red,
+        title: "Favorite Market",
+        subtitle: "Mark as favourite",
+        value: _favorite,
+        onChanged: (v) {
+          setState(() => _favorite = v);
+        },
+      ),
+
+    ],
   ),
 ),
 
 const SizedBox(height: 35),
-Row(
-  children: [
-
-    Expanded(
-      child: OutlinedButton(
-        onPressed: _saving
-            ? null
-            : () {
-                Navigator.pop(context);
-              },
-        child: const Text("Cancel"),
-      ),
+Container(
+  padding: const EdgeInsets.all(20),
+  decoration: BoxDecoration(
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(24),
+    border: Border.all(
+      color: const Color(0xffE5E7EB),
     ),
-
-    const SizedBox(width: 15),
-
-    Expanded(
-      child: FilledButton(
-        onPressed: _saving ? null : _saveMarket,
-        child: _saving
-            ? const SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: Colors.white,
-                ),
-              )
-            : const Text("Save Market"),
+    boxShadow: [
+      BoxShadow(
+        color: Colors.black.withOpacity(.04),
+        blurRadius: 20,
+        offset: const Offset(0, 8),
       ),
-    ),
-  ],
+    ],
+  ),
+  child: Row(
+    children: [
+
+      Expanded(
+        child: OutlinedButton.icon(
+          onPressed: _saving
+              ? null
+              : () {
+                  Navigator.pop(context);
+                },
+          icon: const Icon(Icons.close_rounded),
+          label: const Text("Cancel"),
+          style: OutlinedButton.styleFrom(
+            minimumSize: const Size(
+              double.infinity,
+              56,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(18),
+            ),
+          ),
+        ),
+      ),
+
+      const SizedBox(width: 16),
+
+      Expanded(
+        flex: 2,
+        child: Container(
+          height: 56,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [
+                Color(0xff7C3AED),
+                Color(0xff9333EA),
+              ],
+            ),
+            borderRadius:
+                BorderRadius.circular(18),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.deepPurple
+                    .withOpacity(.30),
+                blurRadius: 18,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: FilledButton.icon(
+            onPressed:
+                _saving ? null : _saveMarket,
+            icon: _saving
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child:
+                        CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  )
+                : const Icon(
+                    Icons.check_circle_rounded,
+                  ),
+            label: Text(
+              _saving
+                  ? "Saving..."
+                  : "Save Market",
+            ),
+            style: FilledButton.styleFrom(
+              backgroundColor:
+                  Colors.transparent,
+              shadowColor: Colors.transparent,
+              minimumSize: const Size(
+                double.infinity,
+                56,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.circular(18),
+              ),
+            ),
+          ),
+        ),
+      ),
+
+    ],
+  ),
 ),
 
 const SizedBox(height: 30),
