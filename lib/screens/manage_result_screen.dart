@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/market_model.dart';
 import '../services/market_service.dart';
 import '../services/result_service.dart';
+
 class ManageResultScreen extends StatefulWidget {
   final String marketId;
 
