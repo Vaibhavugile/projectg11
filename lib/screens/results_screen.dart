@@ -552,14 +552,14 @@ debugPrint("Market Slug : ${market.slug}");
 debugPrint(
     "Today Result : ${_todayResults[market.slug]}");
 
-                         final latest =
-    _todayResults[market.slug] ??
-    market.latestResult;
+                        final latest = _todayResults[market.slug] ?? market.latestResult;
 
-                              final latestResult =
-                                  latest == null
-                                      ? "***-**-***"
-                                      : "${latest["openPanna"]}-${latest["jodi"]}-${latest["closePanna"]}";
+final isTodayResult = latest != null &&
+    latest["resultDate"] == todayDate();
+
+                              final latestResult = isTodayResult
+    ? "${latest["openPanna"]}-${latest["jodi"]}-${latest["closePanna"]}"
+    : "***-**-***";
                                       final status = getMarketStatus(
   openTime: market.openTime,
   closeTime: market.closeTime,
