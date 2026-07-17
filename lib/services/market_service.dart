@@ -181,4 +181,24 @@ Future<void> updateMarket({
       "updatedAt": FieldValue.serverTimestamp(),
     });
   }
+  Stream<List<MarketModel>> streamMarkets() {
+  return _markets
+      .where("isActive", isEqualTo: true)
+      .orderBy("sortOrder")
+      .snapshots()
+      .map((snapshot) {
+    final markets = snapshot.docs
+        .map((doc) => MarketModel.fromFirestore(doc))
+        .toList();
+
+    markets.sort(
+      (a, b) => a.sortOrder.compareTo(b.sortOrder),
+    );
+
+    return markets;
+  });
 }
+}
+/// ==========================================
+/// Stream Markets (Realtime)
+/// ==========================================
