@@ -34,124 +34,257 @@ class UpcomingResultCard extends StatelessWidget {
       case "open overdue":
       case "close overdue":
       case "overdue":
-        return Icons.warning_rounded;
+        return Icons.warning_amber_rounded;
 
       default:
         return Icons.access_time_filled_rounded;
     }
   }
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(22),
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.all(18),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(22),
-            border: Border.all(
-              color: Colors.grey.shade200,
+@override
+Widget build(BuildContext context) {
+  return Material(
+    color: Colors.transparent,
+    child: InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(24),
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 18,
+          vertical: 16,
+        ),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: Colors.deepPurple.shade50,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(.05),
+              blurRadius: 18,
+              offset: const Offset(0, 8),
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(.05),
-                blurRadius: 18,
-                offset: const Offset(0, 8),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
+          ],
+        ),
+        child: Row(
+          children: [
 
-              Container(
-                width: 52,
-                height: 52,
-                decoration: BoxDecoration(
-                  color: color.withOpacity(.12),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Icon(
-                  _statusIcon(),
-                  color: color,
-                  size: 28,
-                ),
-              ),
+            /// LEFT
+            Expanded(
+              child: Column(
+                crossAxisAlignment:
+                    CrossAxisAlignment.start,
+                mainAxisAlignment:
+                    MainAxisAlignment.spaceBetween,
+                children: [
 
-              const SizedBox(width: 16),
+                  Row(
+                    children: [
 
-              Expanded(
-                child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
-                  children: [
-
-                    Text(
-                      marketName,
-                      style: const TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w800,
+                      Container(
+                        width: 34,
+                        height: 34,
+                        decoration: BoxDecoration(
+                          color: color.withOpacity(.12),
+                          borderRadius:
+                              BorderRadius.circular(10),
+                        ),
+                        child: Icon(
+                          Icons.hourglass_top,
+                          color: color,
+                          size: 18,
+                        ),
                       ),
-                    ),
 
-                    const SizedBox(height: 8),
+                      const SizedBox(width: 10),
 
-                    Row(
-                      children: [
-
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 5,
+                      Expanded(
+                        child: Text(
+                          marketName,
+                          maxLines: 1,
+                          overflow:
+                              TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight:
+                                FontWeight.w800,
                           ),
-                          decoration: BoxDecoration(
-                            color: color.withOpacity(.12),
-                            borderRadius:
-                                BorderRadius.circular(20),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 14),
+
+                  Row(
+                    children: [
+
+                      Container(
+                        width: 9,
+                        height: 9,
+                        decoration:
+                            const BoxDecoration(
+                          color: Colors.green,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+
+                      Expanded(
+                        child: Container(
+                          height: 2,
+                          margin:
+                              const EdgeInsets.symmetric(
+                            horizontal: 6,
                           ),
-                          child: Text(
-                            status,
-                            style: TextStyle(
-                              color: color,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 12,
+                          color: Colors.grey.shade300,
+                        ),
+                      ),
+
+                      Container(
+                        width: 9,
+                        height: 9,
+                        decoration:
+                            const BoxDecoration(
+                          color: Colors.redAccent,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  Row(
+                    children: [
+
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                          children: [
+
+                            Text(
+                              openTime,
+                              style: const TextStyle(
+                                fontWeight:
+                                    FontWeight.w700,
+                              ),
                             ),
-                          ),
+
+                            const SizedBox(height: 2),
+
+                            Text(
+                              "OPEN",
+                              style: TextStyle(
+                                color:
+                                    Colors.grey.shade600,
+                                fontSize: 11,
+                              ),
+                            ),
+                          ],
                         ),
+                      ),
 
-                        const SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment:
+                              CrossAxisAlignment.end,
+                          children: [
 
-                        Text(
-                          "$openTime • $closeTime",
-                          style: TextStyle(
-                            color: Colors.grey.shade600,
-                            fontSize: 12,
-                          ),
+                            Text(
+                              closeTime,
+                              style: const TextStyle(
+                                fontWeight:
+                                    FontWeight.w700,
+                              ),
+                            ),
+
+                            const SizedBox(height: 2),
+                            Text(
+  "CLOSE",
+  style: TextStyle(
+    color: Colors.grey.shade600,
+    fontSize: 11,
+  ),
+),
+                          ],
                         ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
+            ),
 
-              const SizedBox(width: 12),
+            const SizedBox(width: 16),
 
-              DefaultTextStyle(
-                style: TextStyle(
-                  color: color,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: 1,
+            /// RIGHT SIDE
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
+                  decoration: BoxDecoration(
+                    color: color.withOpacity(.10),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+
+                      Icon(
+                        _statusIcon(),
+                        size: 14,
+                        color: color,
+                      ),
+
+                      const SizedBox(width: 5),
+
+                      Text(
+                        status.toUpperCase(),
+                        style: TextStyle(
+                          color: color,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                child: countdown,
-              ),
-            ],
-          ),
+
+                const SizedBox(height: 14),
+
+                DefaultTextStyle(
+                  style: TextStyle(
+                    color: color,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 24,
+                    letterSpacing: 1,
+                  ),
+                  child: countdown,
+                ),
+
+                const SizedBox(height: 4),
+
+                Text(
+                  "Starts In",
+                  style: TextStyle(
+                    color: Colors.grey.shade600,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 class LiveMarketCard extends StatelessWidget {
   final String marketName;
-  final String result;
+  final String openPanna;
+  final String jodi;
+  final String closePanna;
   final String openTime;
   final String closeTime;
   final String status;
@@ -14,7 +16,9 @@ class LiveMarketCard extends StatelessWidget {
   const LiveMarketCard({
     super.key,
     required this.marketName,
-    required this.result,
+    required this.openPanna,
+    required this.jodi,
+    required this.closePanna,
     required this.openTime,
     required this.closeTime,
     required this.status,
@@ -26,175 +30,112 @@ class LiveMarketCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isLive =
+        status.toLowerCase().contains("live");
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(30),
         child: Ink(
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(22),
+            borderRadius: BorderRadius.circular(30),
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xff4C1D95),
+                Color(0xff6D28D9),
+                Color(0xff8B5CF6),
+              ],
+            ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(.08),
-                blurRadius: 20,
-                offset: const Offset(0, 8),
+                color: const Color(0xff6D28D9)
+                    .withOpacity(.25),
+                blurRadius: 25,
+                offset: const Offset(0, 12),
               ),
             ],
           ),
-          child: Column(
+          child: Stack(
             children: [
-              /// Header
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 14,
-                  vertical: 12,
-                ),
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(22),
-                  ),
-                  gradient: LinearGradient(
-                    colors: [
-                      Color(0xff5E35B1),
-                      Color(0xff8E24AA),
-                    ],
+
+              Positioned(
+                right: -40,
+                top: -40,
+                child: Container(
+                  width: 150,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withOpacity(.08),
                   ),
                 ),
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.casino,
-                      color: Colors.white,
-                    ),
-                    const SizedBox(width: 8),
+              ),
 
-                    Expanded(
-                      child: Text(
-                        marketName.toUpperCase(),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 17,
-                        ),
-                      ),
-                    ),
-
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 3,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: const Text(
-                        "LIVE",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-
-                    if (featured) ...[
-                      const SizedBox(width: 8),
-                      const Icon(
-                        Icons.star_rounded,
-                        color: Colors.amber,
-                      ),
-                    ],
-                  ],
+              Positioned(
+                left: -30,
+                bottom: -30,
+                child: Icon(
+                  Icons.casino_rounded,
+                  size: 140,
+                  color: Colors.white.withOpacity(.05),
                 ),
               ),
 
               Padding(
-                padding: const EdgeInsets.all(18),
+                padding: const EdgeInsets.all(22),
                 child: Column(
+                  crossAxisAlignment:
+                      CrossAxisAlignment.start,
                   children: [
-                    /// Result
-                    Text(
-                      result,
-                      style: const TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 2,
-                      ),
-                    ),
 
-                    const SizedBox(height: 18),
-
-                    /// Timings
                     Row(
                       children: [
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade100,
-                              borderRadius:
-                                  BorderRadius.circular(12),
-                            ),
-                            child: Column(
-                              children: [
-                                const Icon(
-                                  Icons.login,
-                                  color: Colors.green,
+
+                        Container(
+                          padding:
+                              const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 7,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(.15),
+                            borderRadius:
+                                BorderRadius.circular(30),
+                          ),
+                          child: Row(
+                            children: [
+
+                              Icon(
+                                featured
+                                    ? Icons.workspace_premium
+                                    : Icons.casino,
+                                color: Colors.amber,
+                                size: 16,
+                              ),
+
+                              const SizedBox(width: 6),
+
+                              Text(
+                                featured
+                                    ? "FEATURED"
+                                    : "MARKET",
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight:
+                                      FontWeight.bold,
+                                  fontSize: 11,
                                 ),
-                                const SizedBox(height: 6),
-                                const Text(
-                                  "Open",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                Text(openTime),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
 
-                        const SizedBox(width: 10),
+                        const Spacer(),
 
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade100,
-                              borderRadius:
-                                  BorderRadius.circular(12),
-                            ),
-                            child: Column(
-                              children: [
-                                const Icon(
-                                  Icons.logout,
-                                  color: Colors.red,
-                                ),
-                                const SizedBox(height: 6),
-                                const Text(
-                                  "Close",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                Text(closeTime),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 16),
-
-                    /// Bottom Row
-                    Row(
-                      children: [
                         Container(
                           padding:
                               const EdgeInsets.symmetric(
@@ -202,79 +143,228 @@ class LiveMarketCard extends StatelessWidget {
                             vertical: 7,
                           ),
                           decoration: BoxDecoration(
-                            color:
-                                statusColor.withOpacity(.12),
+                            color: Colors.white.withOpacity(.15),
                             borderRadius:
                                 BorderRadius.circular(30),
                           ),
-                          child: Text(
-                            status,
-                            style: TextStyle(
-                              color: statusColor,
-                              fontWeight:
-                                  FontWeight.bold,
-                            ),
-                          ),
-                        ),
+                          child: Row(
+                            children: [
 
-                        const Spacer(),
+                              const Icon(
+                                Icons.remove_red_eye,
+                                color: Colors.white,
+                                size: 16,
+                              ),
 
-                        Icon(
-                          Icons.remove_red_eye_outlined,
-                          size: 18,
-                          color: Colors.grey.shade600,
-                        ),
+                              const SizedBox(width: 6),
 
-                        const SizedBox(width: 4),
-
-                        Text(
-                          "$viewers",
-                          style: TextStyle(
-                            color: Colors.grey.shade700,
-                            fontWeight: FontWeight.w600,
+                              Text(
+                                _formatViewers(viewers),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight:
+                                      FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
 
-                    const SizedBox(height: 18),
+                    const SizedBox(height: 20),
 
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: onTap,
-                        style: ElevatedButton.styleFrom(
-                          elevation: 0,
-                          backgroundColor:
-                              const Color(0xff6A1B9A),
-                          foregroundColor: Colors.white,
-                          padding:
-                              const EdgeInsets.symmetric(
-                            vertical: 14,
-                          ),
-                          shape:
-                              RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(14),
-                          ),
-                        ),
-                        child: const Row(
-                          mainAxisAlignment:
-                              MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "View Details",
-                              style: TextStyle(
-                                fontWeight:
-                                    FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(width: 8),
-                            Icon(Icons.arrow_forward),
-                          ],
-                        ),
+                    Text(
+                      marketName,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 28,
+                        fontWeight: FontWeight.w900,
                       ),
                     ),
+
+                    const SizedBox(height: 8),
+
+                    Row(
+                      children: [
+
+                        Container(
+                          width: 10,
+                          height: 10,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: isLive
+                                ? Colors.greenAccent
+                                : Colors.orange,
+                          ),
+                        ),
+
+                        const SizedBox(width: 8),
+
+                        Text(
+                          status.toUpperCase(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(.12),
+                        borderRadius:
+                            BorderRadius.circular(22),
+                      ),
+                      child: Row(
+                        children: [
+
+                          Expanded(
+                            child: _resultBox(
+                              "OPEN",
+                              openPanna,
+                            ),
+                          ),
+
+                          const SizedBox(width: 10),
+
+                          Expanded(
+                            child: _resultBox(
+                              "JODI",
+                              jodi,
+                            ),
+                          ),
+
+                          const SizedBox(width: 10),
+
+                          Expanded(
+                            child: _resultBox(
+                              "CLOSE",
+                              closePanna,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+                    Container(
+  padding: const EdgeInsets.symmetric(
+    horizontal: 16,
+    vertical: 14,
+  ),
+  decoration: BoxDecoration(
+    color: Colors.white.withOpacity(.10),
+    borderRadius: BorderRadius.circular(18),
+  ),
+  child: Row(
+    children: [
+
+      Expanded(
+        child: Row(
+          children: [
+
+            const Icon(
+              Icons.schedule_rounded,
+              color: Colors.white70,
+              size: 18,
+            ),
+
+            const SizedBox(width: 8),
+
+            Expanded(
+              child: Text(
+                "$openTime • $closeTime",
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+
+      const SizedBox(width: 10),
+
+      Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 7,
+        ),
+        decoration: BoxDecoration(
+          color: statusColor.withOpacity(.20),
+          borderRadius: BorderRadius.circular(25),
+          border: Border.all(
+            color: statusColor.withOpacity(.45),
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+
+            Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: statusColor,
+                shape: BoxShape.circle,
+              ),
+            ),
+
+            const SizedBox(width: 6),
+
+            Text(
+              status.toUpperCase(),
+              style: TextStyle(
+                color: statusColor,
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ],
+  ),
+),
+
+const SizedBox(height: 22),
+
+SizedBox(
+  width: double.infinity,
+  height: 54,
+  child: ElevatedButton.icon(
+    onPressed: onTap,
+    icon: const Icon(
+      Icons.bar_chart_rounded,
+      size: 20,
+    ),
+    label: const Text(
+      "VIEW RESULT",
+      style: TextStyle(
+        fontWeight: FontWeight.w800,
+        fontSize: 15,
+        letterSpacing: .5,
+      ),
+    ),
+    style: ElevatedButton.styleFrom(
+      backgroundColor: Colors.white,
+      foregroundColor: const Color(0xff6D28D9),
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18),
+      ),
+    ),
+  ),
+),
+
                   ],
                 ),
               ),
@@ -283,5 +373,56 @@ class LiveMarketCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _resultBox(
+    String title,
+    String value,
+  ) {
+    return Container(
+      height: 82,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 26,
+              fontWeight: FontWeight.w900,
+              color: Color(0xff4C1D95),
+            ),
+          ),
+
+          const SizedBox(height: 6),
+
+          Text(
+            title,
+            style: TextStyle(
+              color: Colors.grey.shade700,
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 1,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatViewers(int viewers) {
+    if (viewers >= 1000000) {
+      return "${(viewers / 1000000).toStringAsFixed(1)}M";
+    }
+
+    if (viewers >= 1000) {
+      return "${(viewers / 1000).toStringAsFixed(1)}K";
+    }
+
+    return viewers.toString();
   }
 }

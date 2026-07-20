@@ -41,10 +41,13 @@ class UserHomeScreen extends StatelessWidget {
 
                   SizedBox(height: 24),
 
+
                   /// Today's Tips
                   TodayTipsWidget(),
 
                   SizedBox(height: 24),
+ PopularMarketsWidget(),
+                   SizedBox(height: 24),
 
                   /// Live Markets
                   LiveMarketsWidget(),
@@ -57,9 +60,9 @@ class UserHomeScreen extends StatelessWidget {
                   SizedBox(height: 24),
 
                   /// Popular Markets
-                  PopularMarketsWidget(),
+                 
 
-                  SizedBox(height: 24),
+                  
 
                   /// Recently Viewed
               

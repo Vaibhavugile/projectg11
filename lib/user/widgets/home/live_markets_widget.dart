@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../models/market_model.dart';
 import '../../../services/market_service.dart';
+import '../../../utils/result_utils.dart';
 import 'live_market_card.dart';
-import 'section_title.dart';
 
 class LiveMarketsWidget extends StatelessWidget {
   const LiveMarketsWidget({super.key});
@@ -13,7 +13,8 @@ class LiveMarketsWidget extends StatelessWidget {
     return StreamBuilder<List<MarketModel>>(
       stream: MarketService().streamMarkets(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
+        if (snapshot.connectionState ==
+            ConnectionState.waiting) {
           return const Padding(
             padding: EdgeInsets.symmetric(vertical: 40),
             child: Center(
@@ -25,11 +26,9 @@ class LiveMarketsWidget extends StatelessWidget {
         if (snapshot.hasError) {
           return Padding(
             padding: const EdgeInsets.all(24),
-            child: Center(
-              child: Text(
-                "Something went wrong.\n${snapshot.error}",
-                textAlign: TextAlign.center,
-              ),
+            child: Text(
+              snapshot.error.toString(),
+              textAlign: TextAlign.center,
             ),
           );
         }
@@ -37,72 +36,175 @@ class LiveMarketsWidget extends StatelessWidget {
         final markets = snapshot.data ?? [];
 
         if (markets.isEmpty) {
-          return const Padding(
-            padding: EdgeInsets.all(24),
-            child: Center(
-              child: Text("No markets available"),
-            ),
-          );
+          return const SizedBox.shrink();
         }
 
         return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment:
+              CrossAxisAlignment.start,
           children: [
-            const SectionTitle(
-              title: "🎲 Live Markets",
+
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                20,
+                10,
+                20,
+                0,
+              ),
+              child: Row(
+                children: [
+
+                  Container(
+                    width: 56,
+                    height: 56,
+                    decoration: BoxDecoration(
+                      borderRadius:
+                          BorderRadius.circular(18),
+                      gradient:
+                          const LinearGradient(
+                        colors: [
+                          Color(0xff7C3AED),
+                          Color(0xff5B21B6),
+                        ],
+                      ),
+                    ),
+                    child: const Icon(
+                      Icons.casino_rounded,
+                      color: Colors.white,
+                      size: 28,
+                    ),
+                  ),
+
+                  const SizedBox(width: 16),
+
+                  const Expanded(
+                    child: Column(
+                      crossAxisAlignment:
+                          CrossAxisAlignment.start,
+                      children: [
+
+                        Text(
+                          "Live Markets",
+                          style: TextStyle(
+                            fontSize: 30,
+                            fontWeight:
+                                FontWeight.w900,
+                            height: 1,
+                          ),
+                        ),
+
+                        SizedBox(height: 6),
+
+                        Text(
+                          "Today's Active Markets",
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontWeight:
+                                FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(
+                      horizontal: 18,
+                      vertical: 10,
+                    ),
+                    decoration: BoxDecoration(
+                      color:
+                          const Color(0xff6D28D9),
+                      borderRadius:
+                          BorderRadius.circular(
+                        40,
+                      ),
+                    ),
+                    child: Text(
+                      "${markets.length}",
+                      style:
+                          const TextStyle(
+                        color: Colors.white,
+                        fontWeight:
+                            FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
 
-            GridView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+            const SizedBox(height: 22),
+
+            ListView.separated(
               shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: markets.length,
-              gridDelegate:
-                  const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 14,
-                mainAxisSpacing: 14,
-                childAspectRatio: 0.62,
+              physics:
+                  const NeverScrollableScrollPhysics(),
+              padding:
+                  const EdgeInsets.symmetric(
+                horizontal: 18,
               ),
+              itemCount: markets.length,
+              separatorBuilder: (_, __) =>
+                  const SizedBox(height: 18),
               itemBuilder: (context, index) {
+
                 final market = markets[index];
 
-                final latest = market.latestResult ?? {};
+                final latest =
+                    market.latestResult ?? {};
 
-                final openPanna =
-                    latest["openPanna"]?.toString() ?? "***";
-
-                final jodi =
-                    latest["jodi"]?.toString() ?? "**";
-
-                final closePanna =
-                    latest["closePanna"]?.toString() ?? "***";
-
-                final result =
-                    "$openPanna - $jodi - $closePanna";
-
-                // Temporary status
-                String status = "Upcoming";
-                Color statusColor = Colors.blue;
-
-                if (jodi != "**") {
-                  status = "Result Declared";
-                  statusColor = Colors.green;
-                }
+                final status =
+                    getMarketStatus(
+                  openTime:
+                      market.openTime,
+                  closeTime:
+                      market.closeTime,
+                  todayResult: latest,
+                );
 
                 return LiveMarketCard(
                   marketName: market.name,
-                  result: result,
-                  openTime: market.openTime,
-                  closeTime: market.closeTime,
-                  status: status,
-                  statusColor: statusColor,
-                  featured: market.isFeatured,
-                  viewers: market.viewers,
+
+                  openPanna:
+                      latest["openPanna"]
+                              ?.toString() ??
+                          "***",
+
+                  jodi:
+                      latest["jodi"]
+                              ?.toString() ??
+                          "**",
+
+                  closePanna:
+                      latest["closePanna"]
+                              ?.toString() ??
+                          "***",
+
+                  openTime:
+                      market.openTime,
+
+                  closeTime:
+                      market.closeTime,
+
+                  status:
+                      status.status,
+
+                  statusColor:
+                      _statusColor(
+                    status.badge,
+                  ),
+
+                  featured:
+                      market.isFeatured,
+
+                  viewers:
+                      market.viewers,
+
                   onTap: () {
-                    // TODO:
-                    // Navigator.push(...)
-                    // Market Details Screen
+                    // Navigate
                   },
                 );
               },
@@ -113,5 +215,21 @@ class LiveMarketsWidget extends StatelessWidget {
         );
       },
     );
+  }
+
+  Color _statusColor(String badge) {
+    switch (badge) {
+      case "completed":
+        return Colors.green;
+
+      case "due":
+        return Colors.orange;
+
+      case "overdue":
+        return Colors.red;
+
+      default:
+        return const Color(0xff7C3AED);
+    }
   }
 }

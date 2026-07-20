@@ -133,7 +133,7 @@ class _PopularMarketsWidgetState
             const SizedBox(height: 12),
 
             SizedBox(
-              height: 220,
+              height: 270,
               child: PageView.builder(
                 controller: _pageController,
                 padEnds: false,
